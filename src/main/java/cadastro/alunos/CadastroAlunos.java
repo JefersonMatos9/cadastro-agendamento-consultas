@@ -8,12 +8,11 @@ import java.util.List;
 
 
 public class CadastroAlunos {
+    private List<Alunos> listaAlunos;
 
-
-
-    //Iniciando Lista de Alunos
-    List<Alunos> listaAlunos = new ArrayList<>();
-
+    public CadastroAlunos(){
+        listaAlunos = new ArrayList<>();
+    }
     // Metodo de Cadastrar Alunos
     public void cadastrarAluno( String nome, LocalDate dataNasc, String rua, String bairro, String cidade, String estado) throws Exception {
         // Foreach para verificar se o nome do aluno ja consta na lista.
@@ -38,10 +37,8 @@ public class CadastroAlunos {
         if (listaAlunos.isEmpty()) {
             throw new Exception("A lista está vazia.");
         }
-        boolean buscarNome = false;
         for (Cadastro aluno : listaAlunos) {
             if (aluno.getNome().equalsIgnoreCase(nome)) {
-                buscarNome = true;
                 return aluno;
             }
         }
