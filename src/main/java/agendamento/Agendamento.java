@@ -6,6 +6,10 @@ public class Agendamento {
 private String hora;
 private LocalDate data;
 
+public Agendamento(String hora, LocalDate data){
+    this.hora = hora;
+    this.data = data;
+}
     public String getHora() {
         return hora;
     }

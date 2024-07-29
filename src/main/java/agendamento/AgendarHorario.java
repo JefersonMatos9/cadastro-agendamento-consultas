@@ -9,12 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AgendarHorario {
-    private List<Alunos> listaAlunos;
-    private List<Funcionarias> listaFuncionarias;
-    public AgendarHorario() {
-        listaAlunos = new ArrayList<>();
-        listaFuncionarias = new ArrayList<>();
-    }
+    private List<Alunos> listaAlunos = new ArrayList<>();
+    private List<Funcionarias> listaFuncionarias = new ArrayList<>();
     public void adicionarAluno(Alunos aluno) {
         listaAlunos.add(aluno);
     }
@@ -25,15 +21,12 @@ public class AgendarHorario {
         Alunos aluno = buscarAlunoPorNome(alunoNome);
         Funcionarias funcionaria = buscarFuncionariaPorNome(funcionariaNome);
 
-        if (aluno == null) {
-            throw new IllegalArgumentException("Aluno " + alunoNome + " não encontrado.");
-        }
         if (funcionaria == null){
-            throw new IllegalArgumentException("Funcionaria " + funcionariaNome + " não encontrada.");
-        }
+             throw new HorarioIndisponivelException("Funcionaria não encontrada.");
+}
             if (funcionaria.isHorarioDisponivel(data,hora)){
-                funcionaria.agendarHorario(data,hora);
-            return "Horário agendado para " + alunoNome + " com " + funcionariaNome + " para o dia " + data + " às " + hora;
+                funcionaria.agendarhorario(data,hora);
+            return String.format("Horário agendado para %s com %s no dia %s às %s",alunoNome,funcionariaNome,data,hora );
         } else {
             throw new HorarioIndisponivelException("Horário indisponível para a funcionária " + funcionariaNome);
         }

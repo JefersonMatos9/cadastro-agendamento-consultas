@@ -1,5 +1,6 @@
 package cadastro.cadastroFuncionarios;
 
+import agendamento.Agendador;
 import cadastro.cadastro.Cadastro;
 
 import java.time.LocalDate;
@@ -8,15 +9,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Funcionarias extends Cadastro {
+public class Funcionarias extends Cadastro implements Agendador {
     private String funcao;
     private int horaTrabalhada;
     private double salario;
-    private Map<LocalDate,Set<String>> horariosAgendados;
+    private Map<LocalDate,Set<String>> horariosAgendados = new HashMap<>();
 
-    public Funcionarias(){
-        this.horariosAgendados = new HashMap<>();
-    }
     public String getFuncao() {
         return funcao;
     }
@@ -39,18 +37,22 @@ public class Funcionarias extends Cadastro {
         return null;
     }
 
+    @Override
     public boolean isHorarioDisponivel(LocalDate data,String hora){
-        if (!horariosAgendados.containsKey(data)){  // containsKey verifica se a data ja tem entrada no map
-            return true;
-        }
-        return !horariosAgendados.get(data).contains(hora);// se a data estiver no mapa Contains verifica se o horario esta disponivel
+     Set<String>horarios = horariosAgendados.get(data);
+     return horarios == null || !horarios.contains(hora);
     }
 
-    public void agendarHorario(LocalDate data,String hora){
-        if (!horariosAgendados.containsKey(data)){
-            horariosAgendados.put(data,new HashSet<>()); // se a nao existir entrada no map para a data, inicia um novo conjunto hashSet para armazenar os horarios agendados
+    @Override
+    public void agendarhorario(LocalDate data, String hora) {
+        Set<String> horarios = horariosAgendados.get(data);
+        if (horarios == null){
+            horarios = new HashSet<>();
+            horariosAgendados.put(data,horarios);
         }
-        horariosAgendados.get(data).add(hora); // adiciona a hora especifica ao conjunto de horarios agendados para a data fornecida
-        this.horaTrabalhada++; // incrementa as horas trabalhadas dos funcionarios no mes
+        horarios.add(hora);
+        horaTrabalhada++;
     }
+
+
 }

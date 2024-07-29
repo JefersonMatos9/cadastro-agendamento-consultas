@@ -8,18 +8,15 @@ import java.util.List;
 
 
 public class CadastroAlunos {
-    private List<Alunos> listaAlunos;
+    private List<Alunos> listaAlunos = new ArrayList<>();
 
-    public CadastroAlunos(){
-        listaAlunos = new ArrayList<>();
-    }
     // Metodo de Cadastrar Alunos
     public void cadastrarAluno( String nome, LocalDate dataNasc, String rua, String bairro, String cidade, String estado) throws Exception {
         // Foreach para verificar se o nome do aluno ja consta na lista.
         for (Alunos aluno : listaAlunos) {
             if (aluno.getNome().equalsIgnoreCase(nome)) {
                 // Caso o nome do aluno conste na lista ele lança uma execessão .
-                throw new Exception("Aluno ja possui cadastro.");
+                throw new Exception("Aluno já possui cadastro.");
             }
         }
         //Iniciando o cadastro se o aluno não estiver na lista.
@@ -33,16 +30,16 @@ public class CadastroAlunos {
         //Adicionando aluno a lista
         listaAlunos.add(novoAluno);
     }
-    public Cadastro buscarAluno(String nome) throws Exception {
+    public Alunos buscarAluno(String nome) throws Exception {
         if (listaAlunos.isEmpty()) {
             throw new Exception("A lista está vazia.");
         }
-        for (Cadastro aluno : listaAlunos) {
+        for (Alunos aluno : listaAlunos) {
             if (aluno.getNome().equalsIgnoreCase(nome)) {
                 return aluno;
             }
         }
-        throw new Exception("O nome consultado não existe em nosso Banco de Dados !");
+        throw new Exception("Aluno não encontrado: " + nome);
     }
 }
 
