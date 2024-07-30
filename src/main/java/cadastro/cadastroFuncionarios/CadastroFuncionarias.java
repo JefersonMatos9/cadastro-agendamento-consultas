@@ -11,7 +11,7 @@ import static javax.swing.UIManager.get;
 
 public class CadastroFuncionarias {
     private List<Funcionarias> listaFuncionarias = new ArrayList<>();
-    public void cadastrarFuncionaria(String nome, String cpf, LocalDate dataNasc, String rua, String bairro, String cidade, String estado, String funcao, int horaTrabalhada, double salario) throws CadastroExistenteException {
+    public void cadastrarFuncionaria(String nome, String cpf, LocalDate dataNasc, String rua, String bairro, String cidade, String estado, String funcao, int horaTrabalhada, double salario,double totalAReceber) throws CadastroExistenteException {
         // Verifica se a funcionária já possui cadastro pelo CPF
         for (Funcionarias funcionaria : listaFuncionarias) {
             if (funcionaria.getCpf().equalsIgnoreCase(cpf)) {

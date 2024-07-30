@@ -24,11 +24,12 @@ public class AgendarHorario {
         if (funcionaria == null){
              throw new HorarioIndisponivelException("Funcionaria não encontrada.");
 }
-            if (funcionaria.isHorarioDisponivel(data,hora)){
+            if (funcionaria.isHorarioDisponivel(data,hora) && aluno.isHorarioDisponivel(data, hora)){
                 funcionaria.agendarhorario(data,hora);
+                aluno.agendarhorario(data,hora);
             return String.format("Horário agendado para %s com %s no dia %s às %s",alunoNome,funcionariaNome,data,hora );
         } else {
-            throw new HorarioIndisponivelException("Horário indisponível para a funcionária " + funcionariaNome);
+            throw new HorarioIndisponivelException("Horário indisponível para a funcionária " + funcionariaNome + ", ou para o aluno " + alunoNome);
         }
     }
     private Alunos buscarAlunoPorNome(String nome) {

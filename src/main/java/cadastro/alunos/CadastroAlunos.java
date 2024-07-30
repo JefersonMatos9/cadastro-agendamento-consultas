@@ -11,7 +11,7 @@ public class CadastroAlunos {
     private List<Alunos> listaAlunos = new ArrayList<>();
 
     // Metodo de Cadastrar Alunos
-    public void cadastrarAluno( String nome, LocalDate dataNasc, String rua, String bairro, String cidade, String estado) throws Exception {
+    public void cadastrarAluno( String nome, LocalDate dataNasc, String rua, String bairro, String cidade, String estado,int quantidadeSessoes,double precoPorHora,double totalApagar ) throws Exception {
         // Foreach para verificar se o nome do aluno ja consta na lista.
         for (Alunos aluno : listaAlunos) {
             if (aluno.getNome().equalsIgnoreCase(nome)) {
@@ -27,6 +27,8 @@ public class CadastroAlunos {
         novoAluno.setBairro(bairro);
         novoAluno.setCidade(cidade);
         novoAluno.setEstado(estado);
+        novoAluno.setQuantidadeSessoes(quantidadeSessoes);
+        novoAluno.setPrecoPorHora(precoPorHora);
         //Adicionando aluno a lista
         listaAlunos.add(novoAluno);
     }

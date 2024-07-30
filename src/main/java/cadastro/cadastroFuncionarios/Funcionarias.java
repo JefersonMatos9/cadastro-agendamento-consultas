@@ -13,6 +13,7 @@ public class Funcionarias extends Cadastro implements Agendador {
     private String funcao;
     private int horaTrabalhada;
     private double salario;
+    private double totalAReceber;
     private Map<LocalDate,Set<String>> horariosAgendados = new HashMap<>();
 
     public String getFuncao() {
@@ -32,9 +33,24 @@ public class Funcionarias extends Cadastro implements Agendador {
     }
     public void setSalario(double salario) {
         this.salario = salario;
+        atualizarTotalAReceber();
     }
+    public double getTotalAReceber() {
+        return totalAReceber;
+    }
+
+    public void atualizarTotalAReceber() {
+        this.totalAReceber = this.horaTrabalhada * this.salario;
+    }
+
     public LocalDate getDataDisponivel(){
         return null;
+    }
+
+    //Metodo para adicionar horas trabalhadas
+    public void adicionarHorasTrabalhadas(int horas){
+        this.horaTrabalhada +=horas;
+        atualizarTotalAReceber();
     }
 
     @Override
@@ -52,7 +68,6 @@ public class Funcionarias extends Cadastro implements Agendador {
         }
         horarios.add(hora);
         horaTrabalhada++;
+        atualizarTotalAReceber();
     }
-
-
 }
