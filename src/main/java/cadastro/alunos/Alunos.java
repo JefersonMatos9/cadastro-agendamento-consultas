@@ -39,14 +39,18 @@ public class Alunos extends Cadastro implements Agendador {
     }
     private Map<LocalDate,Set<String>> horariosAgendados = new HashMap<>();
 
-    private void calcularTotalAPagar(){
+    public void calcularTotalAPagar(){
         this.totalAPagar = this.quantidadeSessoes * this.precoPorHora;
     }
+
+
     @Override
     public boolean isHorarioDisponivel(LocalDate data, String hora) {
         Set<String>horarios = horariosAgendados.get(data);
         return horarios == null || !horarios.contains(hora);
     }
+
+
 
     @Override
     public void agendarhorario(LocalDate data, String hora) {
