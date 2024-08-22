@@ -52,7 +52,7 @@ public class Cadastro {
         this.estado = estado;
     }
 
-    public LocalDate getDataNasc () {
+    public LocalDate getDataNasc() {
         return dataNasc;
     }
 

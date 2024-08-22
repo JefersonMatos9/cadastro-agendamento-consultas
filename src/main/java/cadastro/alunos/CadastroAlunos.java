@@ -20,7 +20,7 @@ public class CadastroAlunos {
         if (isAlunoCadastrado(aluno.getNome(), aluno.getDataNasc())) {
             throw new Exception("Aluno já possui cadastro.");
         }
-        // Insere o aluno no banco de dados
+        //Cadastra novo aluno ao banco de dados
         String query = "INSERT INTO alunos(nome, datanascimento, rua, bairro, cidade, estado, quantidadeSessoes, precoPorHora, totalApagar) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -66,10 +66,10 @@ public class CadastroAlunos {
             pstmt.setString(1, nome);
             pstmt.setDate(2, java.sql.Date.valueOf(dataNasc));
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            if (rs.next()) { // Verifica se a consulta encontrou algum resultado.
+                return rs.getInt(1) > 0; //Retorna true se o contador for maior que 0, indicando que o aluno ja existe.
             }
         }
-        return false;
+        return false; // Retorna false se não encontrar nenhum resultado.
     }
 }
