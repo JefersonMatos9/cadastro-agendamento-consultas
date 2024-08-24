@@ -45,6 +45,10 @@ public class Funcionarias extends Cadastro implements Agendador {
         return totalAReceber;
     }
 
+    public void setTotalAReceber(double totalAReceber) {
+        this.totalAReceber = totalAReceber;
+    }
+
     public void atualizarTotalAReceber() {
         this.totalAReceber = this.horaTrabalhada * this.salario;
     }

@@ -4,24 +4,18 @@ import cadastro.excessoes.CadastroExistenteException;
 import cadastro.excessoes.FuncionariaNaoEncontradaException;
 import database.DataBaseConnection;
 
-import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.swing.UIManager.get;
 
 public class CadastroFuncionarias {
-    private List<Funcionarias> listaFuncionarias = new ArrayList<>();
 
+    // Método para Cadastrar Funcionária
     public void cadastrarFuncionaria(Funcionarias funcionaria) throws CadastroExistenteException, SQLException {
-        //Verificando se a funcionaria ja possui cadastro
-        if (isFuncionariaCadastrada(funcionaria.getCpf())) {
-            throw new CadastroExistenteException("Funcionaria com o CPF:" + funcionaria.getCpf() + ",ja possui Cadastro.");
+        // Verifica se a funcionária já possui cadastro
+        if (pesquisarFuncionaria(funcionaria.getCpf()) != null) {
+            throw new CadastroExistenteException("Funcionária com o CPF: " + funcionaria.getCpf() + " já possui cadastro.");
         }
 
         // Cadastra nova funcionária ao banco de dados
@@ -42,54 +36,62 @@ public class CadastroFuncionarias {
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Funcionária Cadastrada com Sucesso.");
+                System.out.println("Funcionária cadastrada com sucesso.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void excluirFuncionaria(int funcionarioId) throws FuncionariaNaoEncontradaException {
-        String query = "DELETE FROM funcionarias WHERE id = ?";
+    // Método para Excluir Funcionária
+    public void excluirFuncionaria(Funcionarias funcionaria) throws FuncionariaNaoEncontradaException, SQLException {
+        // Verifica se a funcionária existe antes de tentar excluí-la
+        if (pesquisarFuncionaria(funcionaria.getCpf()) == null) {
+            throw new FuncionariaNaoEncontradaException("Funcionária com o CPF: " + funcionaria.getCpf() + " não encontrada.");
+        }
+        // Exclui a funcionária caso seja encontrada
+        String query = "DELETE FROM funcionarias WHERE cpf = ?";
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, funcionaria.getCpf());
+
+            // Executa a consulta e verifica se a funcionária foi excluída com sucesso
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Funcionária excluída com sucesso.");
+            } else {
+                System.out.println("Não existe Funcionária com esse CPF: " + funcionaria.getCpf());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para Pesquisar Funcionária
+    public Funcionarias pesquisarFuncionaria(String cpf) throws SQLException {
+        String query = "SELECT * FROM funcionarias WHERE cpf = ?";
 
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, funcionarioId);
-
-            //Executando a consulta e verificando se o produto foi excluido com sucesso.
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Funcionario excluido com sucesso.");
-            } else {
-                System.out.println("Não existe Funcionario com esse Id: " + funcionarioId);
-            }
-        } catch (SQLException e) {
-            //Tratamento de excessões.
-            e.printStackTrace();
-        }
-    }
-
-    public Funcionarias pesquisarFuncionaria(String nome) throws FuncionariaNaoEncontradaException {
-        for (Funcionarias funcionaria : listaFuncionarias) {
-            if (funcionaria.getNome().equalsIgnoreCase(nome)) {
-                return funcionaria;
+            pstmt.setString(1, cpf);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Funcionarias funcionaria = new Funcionarias();
+                    funcionaria.setNome(rs.getString("nome"));
+                    funcionaria.setCpf(rs.getString("cpf"));
+                    funcionaria.setDataNasc(rs.getDate("datanascimento").toLocalDate());
+                    funcionaria.setRua(rs.getString("rua"));
+                    funcionaria.setBairro(rs.getString("bairro"));
+                    funcionaria.setCidade(rs.getString("cidade"));
+                    funcionaria.setEstado(rs.getString("estado"));
+                    funcionaria.setFuncao(rs.getString("funcao"));
+                    funcionaria.setHoraTrabalhada(rs.getInt("horatrabalhada"));
+                    funcionaria.setSalario(rs.getDouble("salario"));
+                    funcionaria.setTotalAReceber(rs.getDouble("total_a_receber"));
+                    return funcionaria; // Retorna o objeto com os dados
+                }
             }
         }
-        throw new FuncionariaNaoEncontradaException("Funcionária não encontrada.");
-    }
-
-    //Verifica se existe funcionaria cadastrada
-    private boolean isFuncionariaCadastrada(String cpf) throws SQLException {
-        String query = "SELECT COUNT(*) FROM funcionarias WHERE cpf = ?";
-
-        try (Connection conn = DataBaseConnection.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-            preparedStatement.setString(1, cpf);
-            ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) { //Verifica se a consulta retornou algum resultado.
-                return rs.getInt(1) > 0; //Retorna true se o contador for maior que 0, indicando que a funcionaria ja existe.
-            }
-        }
-        return false; //Retornar false se não encontrar nenhum resultado.
+        return null; // Retorna null se não encontrar nenhum resultado
     }
 }

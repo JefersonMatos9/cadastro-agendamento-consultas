@@ -20,21 +20,21 @@ public class Main {
 
 
         try {
-            // Cadastrando novos alunos
-            //aluno.setNome("Marly");
-            //aluno.setDataNasc(LocalDate.of(2019, 12, 2));
-            //aluno.setRua("Rua Z");
-            //aluno.setBairro("Bairro K");
-            //aluno.setCidade("Cidade L");
-            //aluno.setEstado("Estado O");
-            //aluno.setQuantidadeSessoes(0);
-            //aluno.setPrecoPorHora(70);
-            //aluno.calcularTotalAPagar(); // calcula e define o total a pagar
+             //Cadastrando novos alunos
+            aluno.setNome("Marly");
+            aluno.setDataNasc(LocalDate.of(2019, 12, 2));
+            aluno.setRua("Rua Z");
+            aluno.setBairro("Bairro K");
+            aluno.setCidade("Cidade L");
+            aluno.setEstado("Estado O");
+            aluno.setQuantidadeSessoes(0);
+            aluno.setPrecoPorHora(70);
+            aluno.calcularTotalAPagar(); // calcula e define o total a pagar
             //cadastroAlunos.cadastrarAluno(aluno); // cadastro aluno
 
             // Cadastrando novas funcionárias
-            funcionaria.setNome("Georgia");
-            funcionaria.setCpf("789456");
+            funcionaria.setNome("Naiara");
+            funcionaria.setCpf("78945625");
             funcionaria.setDataNasc(LocalDate.of(2018, 1, 15));
             funcionaria.setRua("Rua C");
             funcionaria.setBairro("Bairro C");
@@ -44,10 +44,17 @@ public class Main {
             funcionaria.setHoraTrabalhada(0);
             funcionaria.setSalario(25.5);
             funcionaria.getTotalAReceber();
-            //  cadastroFuncionarias.cadastrarFuncionaria(funcionaria); //Cadastrando a funcionaria
+           // cadastroFuncionarias.cadastrarFuncionaria(funcionaria); //Cadastrando a funcionaria
+
+            //PESQUISANDO FUNCIONARIA
+         //   cadastroFuncionarias.pesquisarFuncionaria("78945625");
+
+            //PESQUISANDO UM ALUNO
+            cadastroAlunos.pesquisarAluno("123");
 
             //Excluindo funcionaria do banco de dados utilizando o ID.
-            cadastroFuncionarias.excluirFuncionaria(5);
+            funcionaria.setCpf("1234567891");
+           // cadastroFuncionarias.excluirFuncionaria(funcionaria);
 
             // Adicionar funcionarios a agenda
             //   agendarHorario.adicionarFuncionaria(cadastroFuncionarias.pesquisarFuncionaria("Bruna"));

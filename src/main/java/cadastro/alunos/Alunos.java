@@ -45,6 +45,10 @@ public class Alunos extends Cadastro implements Agendador {
         return totalAPagar;
     }
 
+    public void setTotalAPagar(double totalAPagar) {
+        this.totalAPagar = totalAPagar;
+    }
+
     private Map<LocalDate, Set<String>> horariosAgendados = new HashMap<>();
 
     public void calcularTotalAPagar() {

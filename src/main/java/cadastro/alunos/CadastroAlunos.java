@@ -1,39 +1,38 @@
 package cadastro.alunos;
 
-import cadastro.cadastro.Cadastro;
+import cadastro.excessoes.AlunoNaoEncontradoException;
+import cadastro.excessoes.CadastroExistenteException;
 import database.DataBaseConnection;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CadastroAlunos {
-    private List<Alunos> listaAlunos = new ArrayList<>();
 
     // Método de Cadastrar Alunos
-    public void cadastrarAluno(Alunos aluno) throws Exception {
+    public void cadastrarAluno(Alunos aluno) throws CadastroExistenteException, SQLException {
         // Verifica se o aluno já possui cadastro
-        if (isAlunoCadastrado(aluno.getNome(), aluno.getDataNasc())) {
-            throw new Exception("Aluno já possui cadastro.");
+        if (pesquisarAluno(aluno.getCpf()) != null) {
+            throw new CadastroExistenteException("Aluno com o CPF: " + aluno.getCpf() + " já possui cadastro.");
         }
-        //Cadastra novo aluno ao banco de dados
-        String query = "INSERT INTO alunos(nome, datanascimento, rua, bairro, cidade, estado, quantidadeSessoes, precoPorHora, totalApagar) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // Cadastra novo aluno ao banco de dados
+        String query = "INSERT INTO alunos(nome, cpf, datanascimento, rua, bairro, cidade, estado, quantidadeSessoes, precoPorHora, totalApagar) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, aluno.getNome());
-            pstmt.setDate(2, java.sql.Date.valueOf(aluno.getDataNasc()));
-            pstmt.setString(3, aluno.getRua());
-            pstmt.setString(4, aluno.getBairro());
-            pstmt.setString(5, aluno.getCidade());
-            pstmt.setString(6, aluno.getEstado());
-            pstmt.setInt(7, aluno.getQuantidadeSessoes());
-            pstmt.setDouble(8, aluno.getPrecoPorHora());
-            pstmt.setDouble(9, aluno.getTotalAPagar());
+            pstmt.setString(2, aluno.getCpf());
+            pstmt.setDate(3, java.sql.Date.valueOf(aluno.getDataNasc()));
+            pstmt.setString(4, aluno.getRua());
+            pstmt.setString(5, aluno.getBairro());
+            pstmt.setString(6, aluno.getCidade());
+            pstmt.setString(7, aluno.getEstado());
+            pstmt.setInt(8, aluno.getQuantidadeSessoes());
+            pstmt.setDouble(9, aluno.getPrecoPorHora());
+            pstmt.setDouble(10, aluno.getTotalAPagar());
 
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -44,32 +43,54 @@ public class CadastroAlunos {
         }
     }
 
-    // Método para buscar aluno
-    public Alunos buscarAluno(String nome) throws Exception {
-        if (listaAlunos.isEmpty()) {
-            throw new Exception("A lista está vazia.");
+    // Método para Excluir Aluno
+    public void excluirAluno(Alunos aluno) throws AlunoNaoEncontradoException, SQLException {
+        // Verifica se o aluno existe antes de tentar excluí-lo
+        if (pesquisarAluno(aluno.getCpf()) == null) {
+            throw new AlunoNaoEncontradoException("Aluno com o CPF: " + aluno.getCpf() + " não encontrado.");
         }
-        for (Alunos aluno : listaAlunos) {
-            if (aluno.getNome().equalsIgnoreCase(nome)) {
-                return aluno;
+        // Exclui o aluno caso seja encontrado
+        String query = "DELETE FROM alunos WHERE cpf = ?";
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, aluno.getCpf());
+
+            // Executa a consulta e verifica se o aluno foi excluído com sucesso
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Aluno excluído com sucesso.");
+            } else {
+                System.out.println("Não existe Aluno com esse CPF: " + aluno.getCpf());
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        throw new Exception("Aluno não encontrado: " + nome);
     }
 
-    // Método para verificar se o aluno já possui cadastro
-    private boolean isAlunoCadastrado(String nome, LocalDate dataNasc) throws SQLException {
-        String query = "SELECT COUNT(*) FROM alunos WHERE nome = ? AND datanascimento = ?";
+    // Método para Pesquisar Aluno
+    public Alunos pesquisarAluno(String cpf) throws SQLException {
+        String query = "SELECT * FROM alunos WHERE cpf = ?";
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            pstmt.setString(1, nome);
-            pstmt.setDate(2, java.sql.Date.valueOf(dataNasc));
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) { // Verifica se a consulta encontrou algum resultado.
-                return rs.getInt(1) > 0; //Retorna true se o contador for maior que 0, indicando que o aluno ja existe.
+            pstmt.setString(1, cpf);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Alunos aluno = new Alunos();
+                    aluno.setNome(rs.getString("nome"));
+                    aluno.setCpf(rs.getString("cpf"));
+                    aluno.setDataNasc(rs.getDate("datanascimento").toLocalDate());
+                    aluno.setRua(rs.getString("rua"));
+                    aluno.setBairro(rs.getString("bairro"));
+                    aluno.setCidade(rs.getString("cidade"));
+                    aluno.setEstado(rs.getString("estado"));
+                    aluno.setQuantidadeSessoes(rs.getInt("quantidadeSessoes"));
+                    aluno.setPrecoPorHora(rs.getDouble("precoPorHora"));
+                    aluno.setTotalAPagar(rs.getDouble("totalApagar"));
+                    return aluno;
+                }
             }
         }
-        return false; // Retorna false se não encontrar nenhum resultado.
+        return null; // Retorna null se o aluno não for encontrado
     }
 }
