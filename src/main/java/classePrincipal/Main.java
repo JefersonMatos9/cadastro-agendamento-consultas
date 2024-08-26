@@ -1,26 +1,25 @@
 package classePrincipal;
 
-import agendamento.AgendarHorario;
+import agendamento.SistemaDeAgendamento;
 import cadastro.alunos.Alunos;
-import cadastro.alunos.CadastroAlunos;
-import cadastro.cadastro.Cadastro;
+import cadastro.alunos.AlunoRepository;
 import cadastro.cadastroFuncionarios.CadastroFuncionarias;
 import cadastro.cadastroFuncionarios.Funcionarias;
-import cadastro.excessoes.HorarioIndisponivelException;
 
 import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
+        //CRIANDO OS OBJETOS DAS CLASSES
         Alunos aluno = new Alunos();
         Funcionarias funcionaria = new Funcionarias();
-        CadastroAlunos cadastroAlunos = new CadastroAlunos();
+        AlunoRepository cadastroAlunos = new AlunoRepository();
         CadastroFuncionarias cadastroFuncionarias = new CadastroFuncionarias();
-        AgendarHorario agendarHorario = new AgendarHorario();
+        SistemaDeAgendamento sistemaDeAgendamento = new SistemaDeAgendamento();
 
 
         try {
-             //Cadastrando novos alunos
+            //CADASTRANDO NOVOS ALUNOS
             aluno.setNome("Marly");
             aluno.setDataNasc(LocalDate.of(2019, 12, 2));
             aluno.setRua("Rua Z");
@@ -29,10 +28,10 @@ public class Main {
             aluno.setEstado("Estado O");
             aluno.setQuantidadeSessoes(0);
             aluno.setPrecoPorHora(70);
-            aluno.calcularTotalAPagar(); // calcula e define o total a pagar
-            //cadastroAlunos.cadastrarAluno(aluno); // cadastro aluno
+            aluno.calcularTotalAPagar(); //CALCULA E DEFINE O TOTAL A PAGAR
+            //cadastroAlunos.cadastrarAluno(aluno); //REALIZA O CADASTRO
 
-            // Cadastrando novas funcionárias
+            //CADASTRANDO NOVAS FUNCIONARIAS
             funcionaria.setNome("Naiara");
             funcionaria.setCpf("78945625");
             funcionaria.setDataNasc(LocalDate.of(2018, 1, 15));
@@ -44,51 +43,29 @@ public class Main {
             funcionaria.setHoraTrabalhada(0);
             funcionaria.setSalario(25.5);
             funcionaria.getTotalAReceber();
-           // cadastroFuncionarias.cadastrarFuncionaria(funcionaria); //Cadastrando a funcionaria
+            //cadastroFuncionarias.cadastrarFuncionaria(funcionaria); //REALIZA O CADASTRO
 
-            //PESQUISANDO FUNCIONARIA
-         //   cadastroFuncionarias.pesquisarFuncionaria("78945625");
+            //PESQUISANDO FUNCIONARIA USANDO CPF
+            //cadastroFuncionarias.pesquisarFuncionaria("78945625");
 
-            //PESQUISANDO UM ALUNO
-            cadastroAlunos.pesquisarAluno("123");
+            //EXCLUINDO UMA FUNCIONARIA USANDO O CPF
+            funcionaria.setCpf("78945625");
+            //cadastroFuncionarias.excluirFuncionaria(funcionaria);
 
-            //Excluindo funcionaria do banco de dados utilizando o ID.
-            funcionaria.setCpf("1234567891");
-           // cadastroFuncionarias.excluirFuncionaria(funcionaria);
+            //PESQUISANDO UM ALUNO USANDO CPF
+            //cadastroAlunos.pesquisarAluno("123456");
 
-            // Adicionar funcionarios a agenda
-            //   agendarHorario.adicionarFuncionaria(cadastroFuncionarias.pesquisarFuncionaria("Bruna"));
-            //   agendarHorario.adicionarFuncionaria(cadastroFuncionarias.pesquisarFuncionaria("Amanda"));
-            //   //Adicionar aluno a agenda
-            //    agendarHorario.adicionarAluno(cadastroAlunos.buscarAluno("Jeferson"));
+            //EXCLUINDO UM ALUNO USANDO CPF
+            aluno.setCpf("123456789");
+            //cadastroAlunos.excluirAluno(aluno);
 
-            //Agendar Horario
-            //    String resultado = agendarHorario.agendarHorario("Jeferson","Bruna",LocalDate.of(2024,8,10),"10:00");
-            //Tentando o mesmo Horario com paciente diferente
-            //    try {
-            //         String resultado1 = agendarHorario.agendarHorario("Miguel", "Bruna", LocalDate.of(2024, 8, 10), "10:00");
-            //     }catch (HorarioIndisponivelException e){
-            //       System.out.println(e.getMessage());
-            //  }
-            //Agendando outro horario para o aluno
-            //    String resultado3 = agendarHorario.agendarHorario("Jeferson","Amanda",LocalDate.of(2024,8,10),"11:00");
+            //AGENDAR HORARIO
+            sistemaDeAgendamento.agendarHorario("Jeferson","Bruna",LocalDate.of(2024,8,29),"10:00");
 
-            // Pesquisando aluno
-            //       Alunos aluno1 = cadastroAlunos.buscarAluno("Miguel");
-            //     Alunos aluno2 = cadastroAlunos.buscarAluno("Jeferson" );
-            //    Alunos aluno3 = cadastroAlunos.buscarAluno("Josiane");
-
-            //       cadastroFuncionarias.excluirFuncionaria("Daniela");
-            //     Funcionarias pesquisarFuncionaria = cadastroFuncionarias.pesquisarFuncionaria("Daniela");
-
-            //        try{
-            //          Funcionarias funcionariaPesquisada = cadastroFuncionarias.pesquisarFuncionaria("Daniela");
-            //      }catch (Exception e){
-            //     System.out.println(e.getMessage());
-            //    }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
     }
 }
+ // VERIFICAR SE ESTA ATUALIZANDO OS HORARIOS E OS VALORES

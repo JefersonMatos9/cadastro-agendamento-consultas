@@ -1,6 +1,6 @@
 package cadastro.alunos;
 
-import agendamento.Agendador;
+import agendamento.VerificandoAgendamento;
 import cadastro.cadastro.Cadastro;
 
 import java.time.LocalDate;
@@ -9,11 +9,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Alunos extends Cadastro implements Agendador {
+public class Alunos extends Cadastro implements VerificandoAgendamento {
+    private int id;  // Adicionando o atributo 'id'
     private boolean horaReservada;
     private int quantidadeSessoes;
     private double precoPorHora;
     private double totalAPagar;
+
+    // Getter e Setter para 'id'
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public boolean isHoraReservada() {
         return horaReservada;
@@ -49,29 +59,8 @@ public class Alunos extends Cadastro implements Agendador {
         this.totalAPagar = totalAPagar;
     }
 
-    private Map<LocalDate, Set<String>> horariosAgendados = new HashMap<>();
-
     public void calcularTotalAPagar() {
         this.totalAPagar = this.quantidadeSessoes * this.precoPorHora;
     }
 
-
-    @Override
-    public boolean isHorarioDisponivel(LocalDate data, String hora) {
-        Set<String> horarios = horariosAgendados.get(data);
-        return horarios == null || !horarios.contains(hora);
-    }
-
-
-    @Override
-    public void agendarhorario(LocalDate data, String hora) {
-        Set<String> horarios = horariosAgendados.get(data);
-        if (horarios == null) {
-            horarios = new HashSet<>();
-            horariosAgendados.put(data, horarios);
-        }
-        horarios.add(hora);
-        quantidadeSessoes++;
-        calcularTotalAPagar();
-    }
 }

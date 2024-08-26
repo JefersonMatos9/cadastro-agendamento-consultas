@@ -23,7 +23,7 @@ public class Agendamento {
         return data;
     }
 
-    public void setDia(LocalDate data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 }

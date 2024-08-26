@@ -3,14 +3,12 @@ package cadastro.alunos;
 import cadastro.excessoes.AlunoNaoEncontradoException;
 import cadastro.excessoes.CadastroExistenteException;
 import database.DataBaseConnection;
-
-import java.time.LocalDate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CadastroAlunos {
+public class AlunoRepository {
 
     // Método de Cadastrar Alunos
     public void cadastrarAluno(Alunos aluno) throws CadastroExistenteException, SQLException {

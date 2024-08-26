@@ -1,6 +1,6 @@
 package cadastro.cadastroFuncionarios;
 
-import agendamento.Agendador;
+import agendamento.VerificandoAgendamento;
 import cadastro.cadastro.Cadastro;
 
 import java.time.LocalDate;
@@ -9,12 +9,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Funcionarias extends Cadastro implements Agendador {
+public class Funcionarias extends Cadastro implements VerificandoAgendamento {
+    private int id; // Adicionando o atributo 'id'
     private String funcao;
     private int horaTrabalhada;
     private double salario;
     private double totalAReceber;
-    private Map<LocalDate, Set<String>> horariosAgendados = new HashMap<>();
+
+    // Getter e Setter para 'id'
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFuncao() {
         return funcao;
@@ -51,33 +60,5 @@ public class Funcionarias extends Cadastro implements Agendador {
 
     public void atualizarTotalAReceber() {
         this.totalAReceber = this.horaTrabalhada * this.salario;
-    }
-
-    public LocalDate getDataDisponivel() {
-        return null;
-    }
-
-    //Metodo para adicionar horas trabalhadas
-    public void adicionarHorasTrabalhadas(int horas) {
-        this.horaTrabalhada += horas;
-        atualizarTotalAReceber();
-    }
-
-    @Override
-    public boolean isHorarioDisponivel(LocalDate data, String hora) {
-        Set<String> horarios = horariosAgendados.get(data);
-        return horarios == null || !horarios.contains(hora);
-    }
-
-    @Override
-    public void agendarhorario(LocalDate data, String hora) {
-        Set<String> horarios = horariosAgendados.get(data);
-        if (horarios == null) {
-            horarios = new HashSet<>();
-            horariosAgendados.put(data, horarios);
-        }
-        horarios.add(hora);
-        horaTrabalhada++;
-        atualizarTotalAReceber();
     }
 }
