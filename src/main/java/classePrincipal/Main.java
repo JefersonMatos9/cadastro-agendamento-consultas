@@ -20,7 +20,7 @@ public class Main {
 
         try {
             //CADASTRANDO NOVOS ALUNOS
-            aluno.setNome("Helena");
+            aluno.setNome("Otavio");
             aluno.setCpf("252525");
             aluno.setDataNasc(LocalDate.of(2019, 12, 2));
             aluno.setRua("Rua Y");
@@ -30,7 +30,7 @@ public class Main {
             aluno.setQuantidadeSessoes(0);
             aluno.setPrecoPorHora(70);
             aluno.calcularTotalAPagar(); //CALCULA E DEFINE O TOTAL A PAGAR
-            //cadastroAlunos.cadastrarAluno(aluno); //REALIZA O CADASTRO
+            cadastroAlunos.cadastrarAluno(aluno); //REALIZA O CADASTRO
 
             //CADASTRANDO NOVAS FUNCIONARIAS
             funcionaria.setNome("Naiara");
@@ -61,7 +61,7 @@ public class Main {
             //cadastroAlunos.excluirAluno(aluno);
 
             //AGENDAR HORARIO
-            //sistemaDeAgendamento.agendarHorario("Helena","Naiara",LocalDate.of(2024,7,30),"10:00");
+            //sistemaDeAgendamento.agendarHorario("Helena","Bruna",LocalDate.of(2024,8,27),"10:00");
 
             //CANCELAR AGENDAMENTO
             //sistemaDeAgendamento.cancelarAgendamentoPorId(2);

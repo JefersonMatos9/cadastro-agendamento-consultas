@@ -33,11 +33,9 @@ public class AlunoRepository {
             pstmt.setDouble(10, aluno.getTotalAPagar());
 
             int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Aluno cadastrado com sucesso.");
+            if (rowsAffected == 0){
+                throw new SQLException("Erro ao cadastrar aluno: Nenhuma linha afetada.");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -55,13 +53,9 @@ public class AlunoRepository {
 
             // Executa a consulta e verifica se o aluno foi excluído com sucesso
             int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Aluno excluído com sucesso.");
-            } else {
-                System.out.println("Não existe Aluno com esse CPF: " + aluno.getCpf());
+            if (rowsAffected == 0) {
+                throw new SQLException("Erro ao excluir aluno: Nenhuma linha afetada.");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 

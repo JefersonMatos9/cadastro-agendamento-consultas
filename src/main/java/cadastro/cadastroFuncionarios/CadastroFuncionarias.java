@@ -35,11 +35,9 @@ public class CadastroFuncionarias {
             pstmt.setDouble(11, funcionaria.getTotalAReceber());
 
             int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Funcionária cadastrada com sucesso.");
+            if (rowsAffected == 0) {
+                throw new SQLException("Erro ao cadastrar funcionaria:Nenhuma linha afetada.");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -49,6 +47,7 @@ public class CadastroFuncionarias {
         if (pesquisarFuncionaria(funcionaria.getCpf()) == null) {
             throw new FuncionariaNaoEncontradaException("Funcionária com o CPF: " + funcionaria.getCpf() + " não encontrada.");
         }
+
         // Exclui a funcionária caso seja encontrada
         String query = "DELETE FROM funcionarias WHERE cpf = ?";
         try (Connection conn = DataBaseConnection.getConnection();
@@ -57,13 +56,9 @@ public class CadastroFuncionarias {
 
             // Executa a consulta e verifica se a funcionária foi excluída com sucesso
             int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Funcionária excluída com sucesso.");
-            } else {
-                System.out.println("Não existe Funcionária com esse CPF: " + funcionaria.getCpf());
+            if (rowsAffected == 0) {
+                throw new SQLException("Erro ao excluir a funcionária: Nenhuma linha afetada.");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 

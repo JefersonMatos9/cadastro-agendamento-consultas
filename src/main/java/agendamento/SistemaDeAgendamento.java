@@ -14,7 +14,7 @@ public class SistemaDeAgendamento {
     public void agendarHorario(String alunoNome, String funcionariaNome, LocalDate data, String hora) throws HorarioIndisponivelException {
         Alunos aluno = buscarAlunoPorNome(alunoNome);
         Funcionarias funcionaria = buscarFuncionariaPorNome(funcionariaNome);
-
+//Verificando se aluno e funcionaria existem , e se tem horarios e datas disponiveis
         if (aluno != null && funcionaria != null) {
             if (VerificandoAgendamento.isHorarioDisponivelParaAluno(aluno.getNome(), data, hora) &&
                     VerificandoAgendamento.isHorarioDisponivelParaFuncionaria(funcionaria.getNome(), data, hora)) {
@@ -74,7 +74,6 @@ public class SistemaDeAgendamento {
             return false; // Retorna false em caso de erro
         }
     }
-
 
 
     private Alunos buscarAlunoPorNome(String nome) {
