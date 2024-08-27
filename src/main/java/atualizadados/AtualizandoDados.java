@@ -1,9 +1,10 @@
 package atualizadados;
+import database.DataBaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import database.DataBaseConnection;
 
 public class AtualizandoDados {
 
@@ -47,18 +48,76 @@ public class AtualizandoDados {
         }
     }
 
-    public static int obterSessoesAtualizadas(int id) {
-        // Implementação para obter o número atualizado de sessões
-        return 0;
-    }
-
     public static double calcularTotalPagar(int alunoId) {
-        // Implementação para calcular o total a pagar
-        return 0.0;
+        String query = "SELECT quantidadeSessoes, precoPorHora FROM alunos WHERE id = ?";
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, alunoId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    int quantidadeSessoes = rs.getInt("quantidadeSessoes");
+                    double precoPorHora = rs.getDouble("precoPorHora");
+                    return quantidadeSessoes * precoPorHora;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0; // Retorno padrão em caso de erro
     }
 
     public static double calcularTotalReceber(int funcionariaId) {
-        // Implementação para calcular o total a receber
-        return 0.0;
+        String query = "SELECT horaTrabalhada, salario FROM funcionarias WHERE id = ?";
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, funcionariaId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    int horaTrabalhada = rs.getInt("horaTrabalhada");
+                    double salario = rs.getDouble("salario");
+                    return horaTrabalhada * salario;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0; // Retorno padrão em caso de erro
+    }
+
+    // Adicionando métodos para obter sessões atualizadas
+    public static int obterSessoesAtualizadasAluno(int alunoId) {
+        String query = "SELECT quantidadeSessoes FROM alunos WHERE id = ?";
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, alunoId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("quantidadeSessoes");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; // Retorno padrão em caso de erro
+    }
+
+    public static int obterSessoesAtualizadasFuncionaria(int funcionariaId) {
+        String query = "SELECT horaTrabalhada FROM funcionarias WHERE id = ?";
+        try (Connection conn = DataBaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, funcionariaId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("horaTrabalhada");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; // Retorno padrão em caso de erro
     }
 }

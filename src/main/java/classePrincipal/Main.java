@@ -20,11 +20,12 @@ public class Main {
 
         try {
             //CADASTRANDO NOVOS ALUNOS
-            aluno.setNome("Marly");
+            aluno.setNome("Helena");
+            aluno.setCpf("252525");
             aluno.setDataNasc(LocalDate.of(2019, 12, 2));
-            aluno.setRua("Rua Z");
-            aluno.setBairro("Bairro K");
-            aluno.setCidade("Cidade L");
+            aluno.setRua("Rua Y");
+            aluno.setBairro("Bairro B");
+            aluno.setCidade("Cidade U");
             aluno.setEstado("Estado O");
             aluno.setQuantidadeSessoes(0);
             aluno.setPrecoPorHora(70);
@@ -60,7 +61,10 @@ public class Main {
             //cadastroAlunos.excluirAluno(aluno);
 
             //AGENDAR HORARIO
-            sistemaDeAgendamento.agendarHorario("Jeferson","Bruna",LocalDate.of(2024,8,29),"10:00");
+            //sistemaDeAgendamento.agendarHorario("Helena","Naiara",LocalDate.of(2024,7,30),"10:00");
+
+            //CANCELAR AGENDAMENTO
+            //sistemaDeAgendamento.cancelarAgendamentoPorId(2);
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -68,4 +72,4 @@ public class Main {
         }
     }
 }
- // VERIFICAR SE ESTA ATUALIZANDO OS HORARIOS E OS VALORES
+// VERIFICAR SE ESTA ATUALIZANDO OS HORARIOS E OS VALORES

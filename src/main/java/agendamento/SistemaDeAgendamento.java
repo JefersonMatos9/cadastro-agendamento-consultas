@@ -1,5 +1,6 @@
 package agendamento;
 
+import atualizadados.AtualizandoDados;
 import cadastro.alunos.Alunos;
 import cadastro.cadastroFuncionarios.Funcionarias;
 import cadastro.excessoes.HorarioIndisponivelException;
@@ -8,10 +9,6 @@ import database.DataBaseConnection;
 import java.sql.*;
 import java.time.LocalDate;
 
-import static agendamento.VerificandoAgendamento.isHorarioDisponivelParaAluno;
-import static agendamento.VerificandoAgendamento.isHorarioDisponivelParaFuncionaria;
-import static atualizadados.AtualizandoDados.*;
-
 public class SistemaDeAgendamento {
 
     public void agendarHorario(String alunoNome, String funcionariaNome, LocalDate data, String hora) throws HorarioIndisponivelException {
@@ -19,8 +16,8 @@ public class SistemaDeAgendamento {
         Funcionarias funcionaria = buscarFuncionariaPorNome(funcionariaNome);
 
         if (aluno != null && funcionaria != null) {
-            if (isHorarioDisponivelParaAluno(aluno.getNome(), data, hora) &&
-                    isHorarioDisponivelParaFuncionaria(funcionaria.getNome(), data, hora)) {
+            if (VerificandoAgendamento.isHorarioDisponivelParaAluno(aluno.getNome(), data, hora) &&
+                    VerificandoAgendamento.isHorarioDisponivelParaFuncionaria(funcionaria.getNome(), data, hora)) {
 
                 String query = "INSERT INTO agendamentos(nome_aluno, nome_funcionaria, data, hora) VALUES (?, ?, ?, ?)";
                 try (Connection conn = DataBaseConnection.getConnection();
@@ -33,19 +30,21 @@ public class SistemaDeAgendamento {
                     pstmt.executeUpdate();
 
                     // Atualizar sessões do aluno e funcionária
-                    int novaSessaoAluno = obterSessoesAtualizadas(aluno.getId());
-                    atualizarSessaoAluno(aluno.getId(), novaSessaoAluno);
+                    int sessaoAtualAluno = AtualizandoDados.obterSessoesAtualizadasAluno(aluno.getId());
+                    int novaSessaoAluno = sessaoAtualAluno + 1;
+                    AtualizandoDados.atualizarSessaoAluno(aluno.getId(), novaSessaoAluno);
 
-                    int novaSessaoFuncionaria = obterSessoesAtualizadas(funcionaria.getId());
-                    atualizarSessaoFuncionaria(funcionaria.getId(), novaSessaoFuncionaria);
+                    int sessaoAtualFuncionaria = AtualizandoDados.obterSessoesAtualizadasFuncionaria(funcionaria.getId());
+                    int novaSessaoFuncionaria = sessaoAtualFuncionaria + 1;
+                    AtualizandoDados.atualizarSessaoFuncionaria(funcionaria.getId(), novaSessaoFuncionaria);
 
                     // Atualizar total a pagar e total a receber
-                    double totalPagar = calcularTotalPagar(aluno.getId());
-                    double totalReceber = calcularTotalReceber(funcionaria.getId());
-                    atualizarValores(funcionaria.getId(), totalReceber, aluno.getId(), totalPagar);
+                    double totalPagar = AtualizandoDados.calcularTotalPagar(aluno.getId());
+                    double totalReceber = AtualizandoDados.calcularTotalReceber(funcionaria.getId());
+                    AtualizandoDados.atualizarValores(funcionaria.getId(), totalReceber, aluno.getId(), totalPagar);
 
                 } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("Erro ao agendar horário: " + e.getMessage(), e);
                 }
             } else {
                 throw new HorarioIndisponivelException("Horário indisponível para a funcionária " + funcionariaNome + " ou para o aluno " + alunoNome);
@@ -54,6 +53,29 @@ public class SistemaDeAgendamento {
             throw new HorarioIndisponivelException("Aluno ou funcionária não encontrados.");
         }
     }
+
+    public boolean cancelarAgendamentoPorId(int agendamentoId) {
+        String sql = "DELETE FROM agendamentos WHERE id = ?";
+        try (Connection con = DataBaseConnection.getConnection();
+             PreparedStatement pst = con.prepareStatement(sql)) {
+
+            // Definir o parâmetro da consulta
+            pst.setInt(1, agendamentoId);
+
+            // Executar a exclusão
+            int rowsAffected = pst.executeUpdate();
+
+            // Retorna true se algum registro foi excluído, false caso contrário
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            // Logar o erro de forma apropriada
+            System.err.println("Erro ao cancelar o agendamento: " + e.getMessage());
+            return false; // Retorna false em caso de erro
+        }
+    }
+
+
 
     private Alunos buscarAlunoPorNome(String nome) {
         String query = "SELECT * FROM alunos WHERE nome = ?";
