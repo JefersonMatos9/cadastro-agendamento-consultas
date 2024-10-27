@@ -1,15 +1,8 @@
-package cadastro.alunos;
+package model;
 
 import agendamento.VerificandoAgendamento;
-import cadastro.cadastro.Cadastro;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-public class Alunos extends Cadastro implements VerificandoAgendamento {
+public class Aluno extends Cadastro implements VerificandoAgendamento {
     private int id;  // Adicionando o atributo 'id'
     private boolean horaReservada;
     private int quantidadeSessoes;

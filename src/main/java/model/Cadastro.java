@@ -1,4 +1,4 @@
-package cadastro.cadastro;
+package model;
 
 import java.time.LocalDate;
 
@@ -11,6 +11,7 @@ public class Cadastro {
     private String bairro;
     private String estado;
     private LocalDate dataNasc;
+    private String telefone;
 
     public String getNome() {
         return nome;
@@ -66,5 +67,13 @@ public class Cadastro {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 }

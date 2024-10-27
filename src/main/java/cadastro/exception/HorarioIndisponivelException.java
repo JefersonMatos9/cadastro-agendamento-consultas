@@ -1,4 +1,4 @@
-package cadastro.excessoes;
+package cadastro.exception;
 
 public class HorarioIndisponivelException extends Exception {
     public HorarioIndisponivelException(String message){

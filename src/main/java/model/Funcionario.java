@@ -1,15 +1,8 @@
-package cadastro.cadastroFuncionarios;
+package model;
 
 import agendamento.VerificandoAgendamento;
-import cadastro.cadastro.Cadastro;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-public class Funcionarias extends Cadastro implements VerificandoAgendamento {
+public class Funcionario extends Cadastro implements VerificandoAgendamento {
     private int id; // Adicionando o atributo 'id'
     private String funcao;
     private int horaTrabalhada;

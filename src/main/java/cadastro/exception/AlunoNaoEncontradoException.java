@@ -1,4 +1,4 @@
-package cadastro.excessoes;
+package cadastro.exception;
 
 public class AlunoNaoEncontradoException extends Exception {
     public AlunoNaoEncontradoException(String message){

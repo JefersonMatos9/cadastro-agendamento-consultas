@@ -18,7 +18,7 @@ public class AtualizandoDados {
         }
     }
 
-    public static void atualizarSessaoFuncionaria(int funcionariaId, int novasSessoes) throws SQLException {
+    public static void atualizarSessaoFuncionario(int funcionariaId, int novasSessoes) throws SQLException {
         String sql = "UPDATE funcionarias SET horaTrabalhada = ? WHERE id = ?";
         try (Connection con = DataBaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(sql)) {
@@ -28,7 +28,7 @@ public class AtualizandoDados {
         }
     }
 
-    public static void atualizarValores(int funcionarioId, double totalReceber, int alunoId, double totalPagar) throws SQLException {
+    public static void atualizarValores(int funcionarioId, double totalReceber) throws SQLException {
         String sqlAtualizaFuncionario = "UPDATE funcionarias SET total_a_receber = ? WHERE id = ?";
         String sqlAtualizaAluno = "UPDATE alunos SET totalApagar = ? WHERE id = ?";
 
@@ -42,8 +42,8 @@ public class AtualizandoDados {
             pstFuncionario.executeUpdate();
 
             // Atualizar total a pagar para o aluno
-            pstAluno.setDouble(1, totalPagar);
-            pstAluno.setInt(2, alunoId);
+         //   pstAluno.setDouble(1, totalPagar);
+        //    pstAluno.setInt(2, alunoId);
             pstAluno.executeUpdate();
         }
     }
@@ -104,7 +104,7 @@ public class AtualizandoDados {
         return 0; // Retorno padrão em caso de erro
     }
 
-    public static int obterSessoesAtualizadasFuncionaria(int funcionariaId) {
+    public static int obterSessoesAtualizadasFuncionario(int funcionariaId) {
         String query = "SELECT horaTrabalhada FROM funcionarias WHERE id = ?";
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {

@@ -18,7 +18,7 @@ Este projeto é uma aplicação de cadastro e agendamento de consultas para alun
 - `cadastro/alunos/`: Contém classes para cadastro e gerenciamento de alunos.
 - `cadastro/cadastroFuncionarios/`: Contém classes para cadastro e gerenciamento de funcionários.
 - `cadastro/excessoes/`: Contém classes de exceções personalizadas.
-- `classePrincipal/`: Contém a classe principal que executa a aplicação.
+- `main/`: Contém a classe principal que executa a aplicação.
 
 ## Diagrama de Classes
 

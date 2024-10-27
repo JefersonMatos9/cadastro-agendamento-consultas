@@ -6,6 +6,7 @@ import java.sql.*;
 import java.time.LocalDate;
 
 public interface VerificandoAgendamento {
+
     public static boolean isHorarioDisponivelParaAluno(String alunoNome, LocalDate data, String hora) {
         String query = "SELECT * FROM agendamentos WHERE nome_aluno = ? AND data = ? AND hora = ?";
         try (Connection conn = DataBaseConnection.getConnection();
