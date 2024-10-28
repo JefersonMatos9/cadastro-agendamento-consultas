@@ -88,4 +88,10 @@ public class AgendamentoDatePopulator {
         pstmt.setDouble(parameterIndex++, aluno.getTotalAPagar());
         pstmt.setInt(parameterIndex, aluno.getId()); // ID do aluno
     }
+
+    public void verificandoDisponibilidade(PreparedStatement pstmt,String nome,LocalDate data, String hora)throws SQLException {
+        pstmt.setString(1, nome);
+        pstmt.setDate(2, Date.valueOf(data));
+        pstmt.setString(3, hora);
+    }
 }

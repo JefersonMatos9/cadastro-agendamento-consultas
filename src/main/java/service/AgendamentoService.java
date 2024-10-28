@@ -1,12 +1,12 @@
 package service;
 
-import agendamento.VerificandoAgendamento;
-import atualizadados.AtualizandoDados;
+import check.availability.VerificandoAgendamento;
+import update.service.DataUpdaterService;
 import data.populate.AgendamentoDatePopulator;
 import mapper.util.MapperUtils;
 import model.Aluno;
 import model.Funcionario;
-import cadastro.exception.HorarioIndisponivelException;
+import exception.HorarioIndisponivelException;
 import database.DataBaseConnection;
 
 import java.sql.*;
@@ -71,24 +71,24 @@ public class AgendamentoService {
     }
 
     private void atualizarSessaoAluno(Aluno aluno) throws SQLException {
-        int sessaoAtualAluno = AtualizandoDados.obterSessoesAtualizadasAluno(aluno.getId());
+        int sessaoAtualAluno = DataUpdaterService.obterSessoesAtualizadasAluno(aluno.getId());
         int novaSessaoAluno = sessaoAtualAluno + 1;
-        AtualizandoDados.atualizarSessaoAluno(aluno.getId(), novaSessaoAluno);
+        DataUpdaterService.atualizarSessaoAluno(aluno.getId(), novaSessaoAluno);
     }
 
     private void atualizarSessaoFuncionario(Funcionario funcionario) throws SQLException {
-        int sessaoAtualFuncionario = AtualizandoDados.obterSessoesAtualizadasFuncionario(funcionario.getId());
+        int sessaoAtualFuncionario = DataUpdaterService.obterSessoesAtualizadasFuncionario(funcionario.getId());
         int novaSessaoFuncionario = sessaoAtualFuncionario + 1;
-        AtualizandoDados.atualizarSessaoFuncionario(funcionario.getId(), novaSessaoFuncionario);
+        DataUpdaterService.atualizarSessaoFuncionario(funcionario.getId(), novaSessaoFuncionario);
     }
 
     private void atualizarTotalAPagar(Aluno aluno) throws SQLException {
-        double totalPagar = AtualizandoDados.calcularTotalPagar(aluno.getId());
-        AtualizandoDados.atualizarValores(aluno.getId(), totalPagar);
+        double totalPagar = DataUpdaterService.calcularTotalPagar(aluno.getId());
+        DataUpdaterService.atualizarValores(aluno.getId(), totalPagar);
     }
 
     private void atualizarTotalAReceber(Funcionario funcionario) throws SQLException {
-        double totalReceber = AtualizandoDados.calcularTotalReceber(funcionario.getId());
-        AtualizandoDados.atualizarValores(funcionario.getId(), totalReceber);
+        double totalReceber = DataUpdaterService.calcularTotalReceber(funcionario.getId());
+        DataUpdaterService.atualizarValores(funcionario.getId(), totalReceber);
     }
 }

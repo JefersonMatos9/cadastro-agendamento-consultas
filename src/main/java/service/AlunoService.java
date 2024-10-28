@@ -1,11 +1,12 @@
 package service;
 
-import cadastro.exception.AlunoNaoEncontradoException;
-import cadastro.exception.CadastroExistenteException;
+import exception.AlunoNaoEncontradoException;
+import exception.CadastroExistenteException;
 import data.populate.AgendamentoDatePopulator;
 import database.DataBaseConnection;
 import mapper.util.MapperUtils;
 import model.Aluno;
+import repository.AlunoRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,12 +15,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlunoService {
+public class AlunoService implements AlunoRepository {
 
     private MapperUtils mapperUtils = new MapperUtils();
     private AgendamentoDatePopulator agendamentoDatePopulator = new AgendamentoDatePopulator();
 
     // Método de Cadastrar Alunos
+    @Override
     public void cadastrarAluno(Aluno aluno) throws CadastroExistenteException, SQLException {
         // Verifica se o aluno já possui cadastro usando seu cpf
         if (pesquisarAluno(aluno.getCpf()) != null) {
@@ -42,6 +44,7 @@ public class AlunoService {
     }
 
     // Método para Excluir Aluno
+    @Override
     public void excluirAluno(Aluno aluno) throws AlunoNaoEncontradoException, SQLException {
         // Verifica se o aluno existe antes de tentar excluí-lo
         if (pesquisarAluno(aluno.getCpf()) == null) {
@@ -63,6 +66,7 @@ public class AlunoService {
     }
 
     // Método para Pesquisar Aluno
+    @Override
     public Aluno pesquisarAluno(String cpf) throws SQLException {
         String query = "SELECT * FROM aluno WHERE cpf = ?";
 
@@ -79,6 +83,7 @@ public class AlunoService {
         return null; // Retorna null se o aluno não for encontrado
     }
 
+    @Override
     public void atualizarAluno(Aluno aluno) throws AlunoNaoEncontradoException, SQLException {
         if (pesquisarAlunoPorId(aluno.getId()) == null) {
             throw new AlunoNaoEncontradoException("Aluno(a) com o id: " + aluno.getId() + " não foi encontrado.");
@@ -98,6 +103,7 @@ public class AlunoService {
         }
     }
 
+    @Override
     public List<Aluno> listarAlunos(String nome) throws SQLException {
         String query = "SELECT * FROM aluno WHERE nome = ?";
         List<Aluno> listaDeAlunos = new ArrayList<>();// Cria uma lista para armazenar os alunos
@@ -117,6 +123,7 @@ public class AlunoService {
     }
 
 
+    @Override
     public Aluno pesquisarAlunoPorId(int id) throws SQLException {
         String query = "SELECT * FROM aluno WHERE id = ?";
 

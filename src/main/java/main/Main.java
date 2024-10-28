@@ -49,7 +49,7 @@ public class Main {
             //funcionarioService.atualizarFuncionario(funcionario);
 
             //PESQUISANDO FUNCIONARIA USANDO CPF
-            //cadastroFuncionarias.pesquisarFuncionaria("78945625");
+            funcionarioService.pesquisarFuncionario("78945625");
 
             //EXCLUINDO UMA FUNCIONARIA USANDO O CPF
             //funcionario.setCpf("123455");

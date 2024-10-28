@@ -1,4 +1,4 @@
-package atualizadados;
+package update.service;
 import database.DataBaseConnection;
 
 import java.sql.Connection;
@@ -6,10 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AtualizandoDados {
+public class DataUpdaterService {
 
     public static void atualizarSessaoAluno(int alunoId, int novasSessoes) throws SQLException {
-        String sql = "UPDATE alunos SET quantidadeSessoes = ? WHERE id = ?";
+        String sql = "UPDATE aluno SET quantidade_sessoes = ? WHERE id = ?";
         try (Connection con = DataBaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setInt(1, novasSessoes);
@@ -19,7 +19,7 @@ public class AtualizandoDados {
     }
 
     public static void atualizarSessaoFuncionario(int funcionariaId, int novasSessoes) throws SQLException {
-        String sql = "UPDATE funcionarias SET horaTrabalhada = ? WHERE id = ?";
+        String sql = "UPDATE funcionario SET hora_trabalhada = ? WHERE id = ?";
         try (Connection con = DataBaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(sql)) {
             pst.setInt(1, novasSessoes);
@@ -29,8 +29,8 @@ public class AtualizandoDados {
     }
 
     public static void atualizarValores(int funcionarioId, double totalReceber) throws SQLException {
-        String sqlAtualizaFuncionario = "UPDATE funcionarias SET total_a_receber = ? WHERE id = ?";
-        String sqlAtualizaAluno = "UPDATE alunos SET totalApagar = ? WHERE id = ?";
+        String sqlAtualizaFuncionario = "UPDATE funcionario SET total_a_receber = ? WHERE id = ?";
+        String sqlAtualizaAluno = "UPDATE aluno SET total_a_pagar = ? WHERE id = ?";
 
         try (Connection con = DataBaseConnection.getConnection();
              PreparedStatement pstFuncionario = con.prepareStatement(sqlAtualizaFuncionario);
@@ -49,15 +49,15 @@ public class AtualizandoDados {
     }
 
     public static double calcularTotalPagar(int alunoId) {
-        String query = "SELECT quantidadeSessoes, precoPorHora FROM alunos WHERE id = ?";
+        String query = "SELECT quantidade_sessoes, preco_por_hora FROM aluno WHERE id = ?";
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setInt(1, alunoId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    int quantidadeSessoes = rs.getInt("quantidadeSessoes");
-                    double precoPorHora = rs.getDouble("precoPorHora");
+                    int quantidadeSessoes = rs.getInt("quantidade_sessoes");
+                    double precoPorHora = rs.getDouble("preco_por_hora");
                     return quantidadeSessoes * precoPorHora;
                 }
             }
@@ -68,14 +68,14 @@ public class AtualizandoDados {
     }
 
     public static double calcularTotalReceber(int funcionariaId) {
-        String query = "SELECT horaTrabalhada, salario FROM funcionarias WHERE id = ?";
+        String query = "SELECT hora_trabalhada, salario FROM funcionario WHERE id = ?";
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setInt(1, funcionariaId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    int horaTrabalhada = rs.getInt("horaTrabalhada");
+                    int horaTrabalhada = rs.getInt("hora_trabalhada");
                     double salario = rs.getDouble("salario");
                     return horaTrabalhada * salario;
                 }
@@ -88,14 +88,14 @@ public class AtualizandoDados {
 
     // Adicionando métodos para obter sessões atualizadas
     public static int obterSessoesAtualizadasAluno(int alunoId) {
-        String query = "SELECT quantidadeSessoes FROM alunos WHERE id = ?";
+        String query = "SELECT quantidade_sessoes FROM aluno WHERE id = ?";
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setInt(1, alunoId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("quantidadeSessoes");
+                    return rs.getInt("quantidade_sessoes");
                 }
             }
         } catch (SQLException e) {
@@ -105,14 +105,14 @@ public class AtualizandoDados {
     }
 
     public static int obterSessoesAtualizadasFuncionario(int funcionariaId) {
-        String query = "SELECT horaTrabalhada FROM funcionarias WHERE id = ?";
+        String query = "SELECT hora_trabalhada FROM funcionario WHERE id = ?";
         try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setInt(1, funcionariaId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("horaTrabalhada");
+                    return rs.getInt("hora_trabalhada");
                 }
             }
         } catch (SQLException e) {

@@ -1,8 +1,8 @@
 package model;
 
-import agendamento.VerificandoAgendamento;
+import check.availability.VerificandoAgendamento;
 
-public class Funcionario extends Cadastro implements VerificandoAgendamento {
+public class Funcionario extends Cadastro  {
     private int id; // Adicionando o atributo 'id'
     private String funcao;
     private int horaTrabalhada;

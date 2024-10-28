@@ -1,11 +1,12 @@
 package service;
 
-import cadastro.exception.CadastroExistenteException;
-import cadastro.exception.FuncionariaNaoEncontradaException;
+import exception.CadastroExistenteException;
+import exception.FuncionariaNaoEncontradaException;
 import data.populate.AgendamentoDatePopulator;
 import database.DataBaseConnection;
 import mapper.util.MapperUtils;
 import model.Funcionario;
+import repository.FuncionarioRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,11 +15,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FuncionarioService {
+public class FuncionarioService implements FuncionarioRepository {
     private MapperUtils mapperUtils = new MapperUtils();
     private AgendamentoDatePopulator agendamentoDatePopulator = new AgendamentoDatePopulator();
 
-
+    @Override
     public void inserirFuncionario(Funcionario funcionario) throws CadastroExistenteException, SQLException {
         try {
             if (pesquisarFuncionario(funcionario.getCpf()) != null) {
@@ -42,6 +43,7 @@ public class FuncionarioService {
         }
     }
 
+    @Override
     public void removerFuncionario(Funcionario funcionario) throws FuncionariaNaoEncontradaException, SQLException {
         if (pesquisarFuncionario(funcionario.getCpf()) == null) {
             throw new FuncionariaNaoEncontradaException("Funcionario(a) com o CPF: " + funcionario.getCpf() + " não encontrado.");
@@ -61,7 +63,7 @@ public class FuncionarioService {
         }
     }
 
-
+    @Override
     public Funcionario pesquisarFuncionario(String cpf) throws SQLException {
         String query = "SELECT * FROM funcionario WHERE cpf = ?";
 
@@ -79,7 +81,7 @@ public class FuncionarioService {
         return null; // Retorna null se não encontrar nenhum resultado
     }
 
-
+    @Override
     public void atualizarFuncionario(Funcionario funcionario) throws FuncionariaNaoEncontradaException, SQLException {
         if (pesquisarFuncionarioPorId(funcionario.getId()) == null) {
             throw new FuncionariaNaoEncontradaException("Funcionario(a) com o id: " + funcionario.getId() + " não foi encontrado.");
@@ -101,6 +103,7 @@ public class FuncionarioService {
     }
 
 
+    @Override
     public List<Funcionario> listarfuncionario(String nome) throws SQLException {
         String query = "SELECT * FROM funcionario WHERE nome = ?";
         List<Funcionario> listaDeFuncionarios = new ArrayList<>();// Cria uma lista para armazenar os funcionarios
@@ -119,7 +122,7 @@ public class FuncionarioService {
         return listaDeFuncionarios;
     }
 
-
+    @Override
     public Funcionario pesquisarFuncionarioPorId(int id) throws SQLException {
         String query = "SELECT * FROM funcionario WHERE id = ?";
 

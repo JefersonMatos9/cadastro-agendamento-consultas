@@ -1,8 +1,8 @@
 package model;
 
-import agendamento.VerificandoAgendamento;
+import check.availability.VerificandoAgendamento;
 
-public class Aluno extends Cadastro implements VerificandoAgendamento {
+public class Aluno extends Cadastro  {
     private int id;  // Adicionando o atributo 'id'
     private boolean horaReservada;
     private int quantidadeSessoes;
