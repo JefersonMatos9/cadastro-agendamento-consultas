@@ -2,9 +2,11 @@ package model;
 
 import check.availability.VerificandoAgendamento;
 
+import java.time.LocalTime;
+
 public class Aluno extends Cadastro  {
     private int id;  // Adicionando o atributo 'id'
-    private boolean horaReservada;
+    private LocalTime horaReservada;
     private int quantidadeSessoes;
     private double precoPorHora;
     private double totalAPagar;
@@ -16,14 +18,6 @@ public class Aluno extends Cadastro  {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public boolean isHoraReservada() {
-        return horaReservada;
-    }
-
-    public void setHoraReservada(boolean horaReservada) {
-        this.horaReservada = horaReservada;
     }
 
     public int getQuantidadeSessoes() {
@@ -56,4 +50,11 @@ public class Aluno extends Cadastro  {
         this.totalAPagar = this.quantidadeSessoes * this.precoPorHora;
     }
 
+    public LocalTime getHoraReservada() {
+        return horaReservada;
+    }
+
+    public void setHoraReservada(LocalTime horaReservada) {
+        this.horaReservada = horaReservada;
+    }
 }

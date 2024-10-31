@@ -1,13 +1,14 @@
 package model;
 
-import check.availability.VerificandoAgendamento;
+import java.time.LocalTime;
 
-public class Funcionario extends Cadastro  {
+public class Funcionario extends Cadastro {
     private int id; // Adicionando o atributo 'id'
     private String funcao;
     private int horaTrabalhada;
     private double salario;
     private double totalAReceber;
+    private LocalTime horaReservada;
 
     // Getter e Setter para 'id'
     public int getId() {
@@ -38,6 +39,7 @@ public class Funcionario extends Cadastro  {
         return salario;
     }
 
+
     public void setSalario(double salario) {
         this.salario = salario;
         atualizarTotalAReceber();
@@ -53,5 +55,13 @@ public class Funcionario extends Cadastro  {
 
     public void atualizarTotalAReceber() {
         this.totalAReceber = this.horaTrabalhada * this.salario;
+    }
+
+    public LocalTime getHoraReservada() {
+        return horaReservada;
+    }
+
+    public void setHoraReservada(LocalTime horaReservada) {
+        this.horaReservada = horaReservada;
     }
 }

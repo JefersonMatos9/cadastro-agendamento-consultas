@@ -11,6 +11,7 @@ import database.DataBaseConnection;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.List;
 
 public class AgendamentoService {
 
@@ -18,6 +19,8 @@ public class AgendamentoService {
     private AgendamentoDatePopulator agendamentoDatePopulator = new AgendamentoDatePopulator();
     private AlunoService alunoService = new AlunoService();
     private FuncionarioService funcionarioService = new FuncionarioService();
+
+
 
 
     public void agendarHorario(String alunoCpf, String funcionariaCpf, LocalDate data, String hora) throws HorarioIndisponivelException, SQLException {

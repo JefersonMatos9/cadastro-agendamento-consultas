@@ -12,6 +12,7 @@ public class Cadastro {
     private String estado;
     private LocalDate dataNasc;
     private String telefone;
+    private LocalDate dataReservada;
 
     public String getNome() {
         return nome;
@@ -75,5 +76,13 @@ public class Cadastro {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public LocalDate getDataReservada() {
+        return dataReservada;
+    }
+
+    public void setDataReservada(LocalDate dataReservada) {
+        this.dataReservada = dataReservada;
     }
 }
