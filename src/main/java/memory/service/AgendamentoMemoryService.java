@@ -41,7 +41,6 @@ public class AgendamentoMemoryService {
                 }
             }
         }
-
         return true; // Disponível se não houver conflitos
     }
 
@@ -57,6 +56,9 @@ public class AgendamentoMemoryService {
             aluno.setDataReservada(data);
             funcionario.setHoraReservada(hora);
             funcionario.setDataReservada(data);
+
+            aluno.setQuantidadeSessoes(aluno.getQuantidadeSessoes()+1);
+            funcionario.setHoraTrabalhada(funcionario.getHoraTrabalhada()+1);
 
             System.out.println("Horário reservado com sucesso, para o aluno: " + aluno.getNome() + ",com a funcionaria: " + funcionario.getNome());
         } else {
