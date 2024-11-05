@@ -1,12 +1,16 @@
 package main;
 
+
+import exception.AgendamentoException;
 import service.AgendamentoService;
 import model.Aluno;
 import service.AlunoService;
 import service.FuncionarioService;
 import model.Funcionario;
+import update.service.DataUpdaterService;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,12 +20,13 @@ public class Main {
         AlunoService alunoService = new AlunoService();
         FuncionarioService funcionarioService = new FuncionarioService();
         AgendamentoService sistemaDeAgendamento = new AgendamentoService();
+        DataUpdaterService dataUpdaterService = new DataUpdaterService();
 
 
         try {
             //CADASTRANDO NOVOS ALUNOS
-            aluno.setNome("Miguel Araujo Matos");
-            aluno.setCpf("123422223");
+            aluno.setNome("Paulo");
+            aluno.setCpf("2222");
             aluno.setTelefone("1699");
             aluno.setDataNasc(LocalDate.of(2018, 12, 2));
             aluno.setRua("Rua Y");
@@ -32,15 +37,15 @@ public class Main {
             //alunoService.cadastrarAluno(aluno); //REALIZA O CADASTRO
 
             //CADASTRANDO NOVAS FUNCIONARIA
-            funcionario.setNome("Georgia Onofre");
-            funcionario.setCpf("1234556");
+            funcionario.setNome("Amanda");
+            funcionario.setCpf("3455");
             funcionario.setTelefone("12345684");
             funcionario.setDataNasc(LocalDate.of(2018, 1, 15));
             funcionario.setRua("Rua A");
             funcionario.setBairro("Bairro X");
             funcionario.setCidade("Cidade C");
             funcionario.setEstado("SP");
-            funcionario.setFuncao("Terapeuta Ocupacional");
+            funcionario.setFuncao("Fisioterapeuta");
             funcionario.setSalario(25.5);
             //funcionarioService.inserirFuncionario(funcionario); //REALIZA O CADASTRO
 
@@ -49,7 +54,7 @@ public class Main {
             //funcionarioService.atualizarFuncionario(funcionario);
 
             //PESQUISANDO FUNCIONARIA USANDO CPF
-            funcionarioService.pesquisarFuncionario("78945625");
+            //funcionarioService.pesquisarFuncionario("78945625");
 
             //EXCLUINDO UMA FUNCIONARIA USANDO O CPF
             //funcionario.setCpf("123455");
@@ -68,7 +73,9 @@ public class Main {
 
 
             //AGENDAR HORARIO
-            //sistemaDeAgendamento.agendarHorario("Helena","Bruna",LocalDate.of(2024,8,27),"10:00");
+            sistemaDeAgendamento.agendarHorario("12342","12345",LocalDate.of(2024,6,8), LocalTime.of(23,30));
+
+            //sistemaDeAgendamento.cancelarAgendamentoPorId(10);
 
             //CANCELAR AGENDAMENTO
             //sistemaDeAgendamento.cancelarAgendamentoPorId(2);
@@ -76,6 +83,8 @@ public class Main {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
+        } catch (AgendamentoException e) {
+            throw new RuntimeException(e);
         }
     }
 }

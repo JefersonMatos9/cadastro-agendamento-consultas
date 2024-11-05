@@ -6,17 +6,18 @@ import model.Funcionario;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class AgendamentoDatePopulator {
 
     //Preencher dados do agendamento do funcionario e do aluno
-    public void preencherDadosAgendamento(PreparedStatement pstmt, Funcionario funcionario, Aluno aluno, LocalDate data, String hora) throws SQLException {
-        pstmt.setString(1, aluno.getNome());
-        pstmt.setString(2, funcionario.getNome());
-        pstmt.setDate(3, Date.valueOf(data));
-        pstmt.setString(4, hora);
-        pstmt.executeUpdate();
+    public void preencherDadosAgendamento(PreparedStatement checkStmt, Funcionario funcionario, Aluno aluno, LocalDate data, LocalTime hora) throws SQLException {
+        checkStmt.setString(1, aluno.getCpf());
+        checkStmt.setString(2, funcionario.getCpf());
+        checkStmt.setDate(3, Date.valueOf(data));
+        checkStmt.setTime(4, Time.valueOf(hora));
     }
 
     // Método para preencher os dados do aluno no PreparedStatement
@@ -89,9 +90,15 @@ public class AgendamentoDatePopulator {
         pstmt.setInt(parameterIndex, aluno.getId()); // ID do aluno
     }
 
-    public void verificandoDisponibilidade(PreparedStatement pstmt,String nome,LocalDate data, String hora)throws SQLException {
-        pstmt.setString(1, nome);
-        pstmt.setDate(2, Date.valueOf(data));
-        pstmt.setString(3, hora);
+    public void preencherDadosDisponibilidade(PreparedStatement pstmt,Aluno aluno,Funcionario funcionario, LocalDate data,LocalTime hora)throws SQLException {
+        System.out.println("Verificando a disponibilidade para:");
+        System.out.println("Nome Aluno: " + aluno.getNome());
+        System.out.println("Nome Funcionário: " + funcionario.getNome());
+        System.out.println("Data: " + data);
+        System.out.println("Hora: " + hora);
+        pstmt.setString(1, aluno.getCpf());
+        pstmt.setString(2, funcionario.getCpf());
+            pstmt.setDate(3, Date.valueOf(data));
+            pstmt.setTime(4, Time.valueOf(hora));
     }
 }

@@ -4,6 +4,7 @@ import exception.AlunoNaoEncontradoException;
 import exception.CadastroExistenteException;
 import model.Aluno;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface AlunoRepository {
     void excluirAluno(Aluno aluno) throws AlunoNaoEncontradoException, SQLException;
 
     // Método para pesquisar aluno por CPF
-    Aluno pesquisarAluno(String cpf) throws SQLException;
+    Aluno pesquisarAluno(String cpf, Connection conn) throws SQLException;
 
     // Método para atualizar informações do aluno
     void atualizarAluno(Aluno aluno) throws AlunoNaoEncontradoException, SQLException;

@@ -1,6 +1,6 @@
 package service;
 
-import check.availability.VerificandoAgendamento;
+import exception.AgendamentoException;
 import update.service.DataUpdaterService;
 import data.populate.AgendamentoDatePopulator;
 import mapper.util.MapperUtils;
@@ -11,7 +11,9 @@ import database.DataBaseConnection;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalTime;
+
+import static update.service.DataUpdaterService.*;
 
 public class AgendamentoService {
 
@@ -20,36 +22,50 @@ public class AgendamentoService {
     private AlunoService alunoService = new AlunoService();
     private FuncionarioService funcionarioService = new FuncionarioService();
 
+    public void agendarHorario(String alunoCpf, String funcionarioCpf, LocalDate data, LocalTime hora) throws HorarioIndisponivelException, SQLException, AgendamentoException {
+        try (Connection conn = DataBaseConnection.getConnection()) {
+            conn.setAutoCommit(false); // Inicia transação
 
+            Aluno aluno = alunoService.pesquisarAluno(alunoCpf, conn);
+            if (aluno == null) {
+                throw new HorarioIndisponivelException("Aluno com CPF: " + alunoCpf + " não encontrado.");
+            }
 
+            Funcionario funcionario = funcionarioService.pesquisarFuncionario(funcionarioCpf, conn);
+            if (funcionario == null) {
+                throw new HorarioIndisponivelException("Funcionário com CPF: " + funcionarioCpf + " não encontrado.");
+            }
 
-    public void agendarHorario(String alunoCpf, String funcionariaCpf, LocalDate data, String hora) throws HorarioIndisponivelException, SQLException {
-        Aluno aluno = alunoService.pesquisarAluno(alunoCpf);
-        Funcionario funcionario = funcionarioService.pesquisarFuncionario(funcionariaCpf);
+            // Verifica disponibilidade
+            if (!verificarDisponibilidade(conn, aluno, funcionario, data, hora)) {
+                throw new HorarioIndisponivelException("Horário indisponível para agendamento.");
+            }
 
-        verificacaoExistencia(aluno, funcionario);
+            // Realiza inserção de agendamento
+            String insertSql = "INSERT INTO agendamentos(cpf_aluno, cpf_funcionaria, data, hora) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                agendamentoDatePopulator.preencherDadosAgendamento(insertStmt, funcionario, aluno, data, hora);
+                int rowsInserted = insertStmt.executeUpdate();
+                if (rowsInserted > 0) {
 
-        if (!VerificandoAgendamento.isHorarioDisponivelParaAluno(aluno.getNome(), data, hora) ||
-                !VerificandoAgendamento.isHorarioDisponivelParaFuncionaria(funcionario.getNome(), data, hora)) {
-            throw new HorarioIndisponivelException("Horário indisponível para a funcionária " + funcionariaCpf + " ou para o aluno " + alunoCpf);
-        }
-
-        String query = "INSERT INTO agendamentos(nome_aluno, nome_funcionaria, data, hora) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DataBaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-            agendamentoDatePopulator.preencherDadosAgendamento(pstmt, funcionario, aluno, data, hora);
-
-            atualizarSessaoAluno(aluno);
-            atualizarSessaoFuncionario(funcionario);
-
-            atualizarTotalAPagar(aluno);
-            atualizarTotalAReceber(funcionario);
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao agendar horário: " + e.getMessage(), e);
+                    // Atualiza sessão e valores
+                    atualizarSessaoEValores(conn, aluno, funcionario);
+                    conn.commit(); // Confirma a transação
+                } else {
+                    conn.rollback();
+                    throw new HorarioIndisponivelException("Falha ao inserir agendamento.");
+                }
+            } catch (SQLException e) {
+                conn.rollback(); //Reverte a transação caso de error
+                throw new AgendamentoException("ERRO: Falha ao realizar agendamento: " + e.getMessage(), e);
+            }
+        } catch (HorarioIndisponivelException e) {
+            throw e; // relanca excessoes especificas
+        } catch (Exception e) {
+            throw new AgendamentoException("Erro: Falha no agendamento: " + e.getMessage(), e);
         }
     }
+
 
     public boolean cancelarAgendamentoPorId(int agendamentoId) {
         String sql = "DELETE FROM agendamentos WHERE id = ?";
@@ -58,6 +74,7 @@ public class AgendamentoService {
 
             pst.setInt(1, agendamentoId);
             int rowsAffected = pst.executeUpdate();
+            System.out.println("Agendamento cancelado com sucesso.");
             return rowsAffected > 0;
 
         } catch (SQLException e) {
@@ -66,32 +83,59 @@ public class AgendamentoService {
         }
     }
 
+    private void atualizarSessao(Connection conn, String cpf, boolean isAluno) throws SQLException {
+        int sessaoAtual = isAluno ?
+                DataUpdaterService.obterSessoesAtualizadasAluno(conn, cpf) :
+                DataUpdaterService.obterSessoesAtualizadasFuncionario(conn, cpf);
+        int novaSessao = sessaoAtual + 1;
 
-    private void verificacaoExistencia(Aluno aluno, Funcionario funcionario) throws HorarioIndisponivelException {
-        if (aluno == null || funcionario == null) {
-            throw new HorarioIndisponivelException("Aluno ou funcionária não encontrados.");
+        if (isAluno) {
+            DataUpdaterService.atualizarSessaoAluno(conn, cpf, novaSessao);
+        } else {
+            atualizarSessaoFuncionario(conn, cpf, novaSessao);
         }
     }
 
-    private void atualizarSessaoAluno(Aluno aluno) throws SQLException {
-        int sessaoAtualAluno = DataUpdaterService.obterSessoesAtualizadasAluno(aluno.getId());
-        int novaSessaoAluno = sessaoAtualAluno + 1;
-        DataUpdaterService.atualizarSessaoAluno(aluno.getId(), novaSessaoAluno);
+    private void atualizarTotal(Connection conn, String cpf, boolean isAluno) throws SQLException {
+        try {
+            double total = isAluno ?
+                    calcularTotalPagar(conn, cpf) :
+                    calcularTotalReceber(conn, cpf);
+            DataUpdaterService.atualizarValores(conn, cpf, total, isAluno);
+        } catch (SQLException e) {
+            System.err.println("Erro ao atualizar total para o cpf: " + cpf);
+        }
     }
 
-    private void atualizarSessaoFuncionario(Funcionario funcionario) throws SQLException {
-        int sessaoAtualFuncionario = DataUpdaterService.obterSessoesAtualizadasFuncionario(funcionario.getId());
-        int novaSessaoFuncionario = sessaoAtualFuncionario + 1;
-        DataUpdaterService.atualizarSessaoFuncionario(funcionario.getId(), novaSessaoFuncionario);
+    private void atualizarSessaoEValores(Connection conn, Aluno aluno, Funcionario funcionario) throws SQLException {
+        try { // Atualiza sessões e valores em uma única transação
+            atualizarSessao(conn, aluno.getCpf(), true);
+            atualizarSessao(conn, funcionario.getCpf(), false);
+            atualizarTotal(conn, aluno.getCpf(), true);
+            atualizarTotal(conn, funcionario.getCpf(), false);
+        } catch (SQLException e) {
+            System.err.println("Erro durante atualização de sessao e valores " + e.getMessage());
+            throw e;
+        }
     }
 
-    private void atualizarTotalAPagar(Aluno aluno) throws SQLException {
-        double totalPagar = DataUpdaterService.calcularTotalPagar(aluno.getId());
-        DataUpdaterService.atualizarValores(aluno.getId(), totalPagar);
-    }
-
-    private void atualizarTotalAReceber(Funcionario funcionario) throws SQLException {
-        double totalReceber = DataUpdaterService.calcularTotalReceber(funcionario.getId());
-        DataUpdaterService.atualizarValores(funcionario.getId(), totalReceber);
+    private boolean verificarDisponibilidade(Connection conn, Aluno aluno, Funcionario funcionario, LocalDate data, LocalTime hora) throws SQLException {
+        String checkSql = "SELECT 1 FROM agendamentos WHERE (cpf_aluno = ? OR cpf_funcionaria = ?) " +
+                "AND data = ? AND hora = ?";
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+            agendamentoDatePopulator.preencherDadosDisponibilidade(checkStmt, aluno, funcionario, data, hora);
+            // Executa a consulta e verifica se há resultados
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (rs.next()) {
+                    // Existe um registro para o horário solicitado, então o horário não está disponível
+                    System.out.println("Horário não disponível para o aluno: " + aluno.getNome() + " e funcionário: " + funcionario.getNome());
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Erro ao verificar disponibilidade de horário: " + e.getMessage(), e);
+        }
     }
 }

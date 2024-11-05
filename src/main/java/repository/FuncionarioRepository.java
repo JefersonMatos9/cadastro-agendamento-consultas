@@ -4,6 +4,7 @@ import exception.CadastroExistenteException;
 import exception.FuncionariaNaoEncontradaException;
 import model.Funcionario;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface FuncionarioRepository {
 
     void removerFuncionario(Funcionario funcionario) throws FuncionariaNaoEncontradaException, SQLException;
 
-    Funcionario pesquisarFuncionario(String cpf) throws SQLException;
+    Funcionario pesquisarFuncionario(String cpf, Connection conn) throws SQLException;
 
     void atualizarFuncionario(Funcionario funcionario) throws FuncionariaNaoEncontradaException, SQLException;
 

@@ -1,8 +1,11 @@
 package model;
 
+
+
 import java.time.LocalTime;
 
 public class Funcionario extends Cadastro {
+
     private int id; // Adicionando o atributo 'id'
     private String funcao;
     private int horaTrabalhada;
@@ -10,14 +13,6 @@ public class Funcionario extends Cadastro {
     private double totalAReceber;
     private LocalTime horaReservada;
 
-    // Getter e Setter para 'id'
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getFuncao() {
         return funcao;
@@ -25,6 +20,14 @@ public class Funcionario extends Cadastro {
 
     public void setFuncao(String funcao) {
         this.funcao = funcao;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getHoraTrabalhada() {
@@ -38,7 +41,6 @@ public class Funcionario extends Cadastro {
     public double getSalario() {
         return salario;
     }
-
 
     public void setSalario(double salario) {
         this.salario = salario;
