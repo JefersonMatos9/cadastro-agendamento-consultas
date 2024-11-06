@@ -57,8 +57,8 @@ public class Main {
             //funcionarioService.pesquisarFuncionario("78945625");
 
             //EXCLUINDO UMA FUNCIONARIA USANDO O CPF
-            //funcionario.setCpf("123455");
-            //funcionarioService.removerFuncionario(funcionario);
+            funcionario.setCpf("12345");
+            funcionarioService.removerFuncionario(funcionario);
 
             //ATUALIZANDO DADOS DO ALUNO USANDO ID
             //aluno.setId(1);
@@ -68,14 +68,14 @@ public class Main {
             //cadastroAlunos.pesquisarAluno("123456");
 
             //EXCLUINDO UM ALUNO USANDO CPF
-            //aluno.setCpf("12342222");
-            //alunoService.excluirAluno(aluno);
+            aluno.setCpf("12342");
+            alunoService.excluirAluno(aluno);
 
 
             //AGENDAR HORARIO
-            sistemaDeAgendamento.agendarHorario("12342","12345",LocalDate.of(2024,6,8), LocalTime.of(23,30));
+           // sistemaDeAgendamento.agendarHorario("12342","12345",LocalDate.of(2024,6,8), LocalTime.of(23,30));
 
-            //sistemaDeAgendamento.cancelarAgendamentoPorId(10);
+            //sistemaDeAgendamento.cancelarAgendamento(11);
 
             //CANCELAR AGENDAMENTO
             //sistemaDeAgendamento.cancelarAgendamentoPorId(2);
@@ -83,8 +83,6 @@ public class Main {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-        } catch (AgendamentoException e) {
-            throw new RuntimeException(e);
         }
     }
 }

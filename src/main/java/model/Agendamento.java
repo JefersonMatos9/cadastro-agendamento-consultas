@@ -1,22 +1,43 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Agendamento {
-    private String hora;
+    private LocalTime hora;
     private LocalDate data;
     private boolean status;
+    private String cpfAluno;
+    private String cpfFuncionario;
 
-    public Agendamento(String hora, LocalDate data) {
+    public Agendamento(LocalTime hora, LocalDate data, String cpfAluno, String cpfFuncionario) {
         this.hora = hora;
         this.data = data;
+        this.cpfAluno = cpfAluno;
+        this.cpfFuncionario = cpfFuncionario;
     }
 
-    public String getHora() {
+    public String getCpfAluno() {
+        return cpfAluno;
+    }
+
+    public void setCpfAluno(String cpfAluno) {
+        this.cpfAluno = cpfAluno;
+    }
+
+    public String getCpfFuncionario() {
+        return cpfFuncionario;
+    }
+
+    public void setCpfFuncionario(String cpfFuncionario) {
+        this.cpfFuncionario = cpfFuncionario;
+    }
+
+    public LocalTime getHora() {
         return hora;
     }
 
-    public void setHora(String hora) {
+    public void setHora(LocalTime hora) {
         this.hora = hora;
     }
 
